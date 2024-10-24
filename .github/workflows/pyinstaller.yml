@@ -25,17 +25,16 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Install Dependencies Analyzer
+      - name: Install Dependency Walker
         run: |
-          Invoke-WebRequest -Uri "https://github.com/lucasg/Dependencies/releases/download/v1.10/Dependencies_x64_Release.zip" -OutFile "Dependencies.zip"
-          Expand-Archive -Path "Dependencies.zip" -DestinationPath "C:\Tools\Dependencies"
+          $url = "https://dependencywalker.com/depends22_x64.zip"
+          $output = "depends.zip"
+          Invoke-WebRequest -Uri $url -OutFile $output
+          Expand-Archive -Path $output -DestinationPath "C:\Users\RUNNER~1\AppData\Local\Nuitka\Nuitka\Cache\DOWNLO~1\depends\x86_64"
         shell: pwsh
 
-      - name: Set Environment Variable for Dependencies
-        run: echo "DEPSCMD=C:\Tools\Dependencies\DependenciesGui.exe" | Out-File -Append -FilePath $env:GITHUB_ENV
-
       - name: Compile Python script with Nuitka
-        run: nuitka --standalone --onefile --follow-imports --windows-dependency-tool=pefile app/main.py
+        run: nuitka --standalone --onefile --follow-imports --windows-dependency-tool=pefile --enable-plugin=tk-inter app/main.py
 
       - name: Upload Executable
         uses: actions/upload-artifact@v4
