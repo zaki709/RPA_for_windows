@@ -25,7 +25,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: build
-        run: pyinstaller app/main.py --onefile --name rpa_for_windows.exe
+        run: pyinstaller -F app/main.py --onefile --name rpa_for_windows.exe
   
       - name: upload
         uses: actions/upload-artifact@v4
