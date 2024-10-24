@@ -2,6 +2,7 @@
 
 This is a RPA tool which can type hot-key and some commands recursively.
 
+
 # How to use.
 
 ## Set up
@@ -10,7 +11,7 @@ This is a RPA tool which can type hot-key and some commands recursively.
 make init
 ```
 
-## run GUI
+## run and check GUI
 
 ```
 make run
