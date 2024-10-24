@@ -4,9 +4,9 @@ SHELL=/bin/bash
 .PHONY: init
 init:
 	python3 -m venv $(VENV_DIR)
-	$(install)
 
-$(install):
+.PHONY: install
+install:
 	pip install --upgrade pip && \
 	pip install -r requirements.txt
 	
