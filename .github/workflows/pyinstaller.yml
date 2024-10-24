@@ -14,7 +14,7 @@ jobs:
       - name: Checkout commit
         uses: actions/checkout@main
 
-      - name: Set up Python 3.10
+      - name: Set up Python 3.11
         uses: actions/setup-python@main
         with: { python-version: 3.11 }
 
@@ -25,10 +25,10 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: build
-        run: pyinstaller -F app/main.py --onefile --name rpa_for_windows.exe
+        run: pyinstaller -F app/main.py
   
       - name: upload
         uses: actions/upload-artifact@v4
         with:
-          name: sample-windows
-          path: dist/rpa_for_windows.exe
+          name: rpa_for_windows
+          path: dist/main
