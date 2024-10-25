@@ -24,11 +24,10 @@ jobs:
           nuitka-version: main
           script-name: app/main.py
           onefile: true
-          standalone: true
 
       # アーティファクトをアップロードしますわ
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: exe
           path: build/main.exe
