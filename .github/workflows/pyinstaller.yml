@@ -29,7 +29,8 @@ jobs:
           nuitka-version: main
           script-name: app/main.py
           onefile: true
-          enable-plugin: tk-inter
+          enable-plugins:
+            tk-inter: true
 
       # アーティファクトをアップロードしますわ
       - name: Upload Artifact
