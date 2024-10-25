@@ -1,34 +1,40 @@
-name: push
-on:
-  push:
-    tags:
-      - "v*"
+name: Compile Python
+on: [push]
 
 jobs:
-  windows-build:
+
+  build:
+    # こちらはWindowsに対応しておりますわ。
     runs-on: windows-latest
-    defaults:
-      run:
-        working-directory: .
+
     steps:
-      - name: Checkout commit
-        uses: actions/checkout@main
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@main
-        with: { python-version: 3.11 }
+      # リポジトリをチェックアウトするのです
+      - uses: actions/checkout@v3
 
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip PyInstaller
+      # Pythonのセットアップを行いますわ
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9' # 使用するPythonのバージョンの範囲または正確なバージョンを、SemVerのバージョン範囲の構文を使用して指定しますわ
+          architecture: 'x64' # オプションでx64またはx86を指定しますわ。指定がない場合はデフォルトでx64になりますわ
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-      - name: build
-        run: pyinstaller -F app/main.py
-  
-      - name: upload
+      # Pythonスクリプトをスタンドアロンのexeにビルドしますわ
+      - uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          script-name: app/main.py
+          onefile: true
+          enable-plugins:
+            tk-inter: true
+
+      # アーティファクトをアップロードしますわ
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: rpa_for_windows
-          path: dist/main
+          name: exe
+          path: build/main.exe
