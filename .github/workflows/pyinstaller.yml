@@ -1,44 +1,33 @@
-name: Build Python Application with Nuitka on Windows
-
-on:
-  push:
-    branches:
-      - main
-    tags:
-      - "v*"
+name: Compile Python
+on: [push]
 
 jobs:
+
   build:
+    # こちらはWindowsに対応しておりますわ。
     runs-on: windows-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      # リポジトリをチェックアウトするのです
+      - uses: actions/checkout@v3
+
+      # Pythonのセットアップを行いますわ
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: '3.9' # 使用するPythonのバージョンの範囲または正確なバージョンを、SemVerのバージョン範囲の構文を使用して指定しますわ
+          architecture: 'x64' # オプションでx64またはx86を指定しますわ。指定がない場合はデフォルトでx64になりますわ
 
-      - name: Install Nuitka
-        run: pip install nuitka
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Install Dependencies Analyzer
-        run: |
-          Invoke-WebRequest -Uri "https://github.com/lucasg/Dependencies/releases/download/v1.10/Dependencies_x64_Release.zip" -OutFile "Dependencies.zip"
-          Expand-Archive -Path "Dependencies.zip" -DestinationPath "C:\Tools\Dependencies"
-        shell: pwsh
-
-      - name: Set Environment Variable for Dependencies
-        run: echo "DEPSCMD=C:\Tools\Dependencies\DependenciesGui.exe" | Out-File -Append -FilePath $env:GITHUB_ENV
-
-      - name: Compile Python script with Nuitka
-        run: nuitka --standalone --onefile --follow-imports --windows-dependency-tool=pefile app/main.py
-
-      - name: Upload Executable
-        uses: actions/upload-artifact@v4
+      # Pythonスクリプトをスタンドアロンのexeにビルドしますわ
+      - uses: Nuitka/Nuitka-Action@main
         with:
-          name: Compiled-Executable
+          nuitka-version: main
+          script-name: app/main.py
+          onefile: true
+
+      # アーティファクトをアップロードしますわ
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: exe
           path: main.dist/main.exe
